@@ -127,9 +127,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final imageFile = ref.watch(profileImageProvider);
-    final controller = ref.read(profileImageProvider.notifier);
-
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -137,7 +134,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const ProfileImagePicker(),
-          const SizedBox(height: 30),
           const SizedBox(height: 30),
           _buildReadOnlyField(nameController, Icons.person, 'Name'),
           const SizedBox(height: 30),

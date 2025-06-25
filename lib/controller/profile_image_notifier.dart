@@ -20,18 +20,13 @@ class ProfileImageNotifier extends StateNotifier<File?> {
   }
 
   Future<void> pickImage() async {
-    final status = await Permission.photos.request();
-    if (!status.isGranted) {
-      return; // or show a dialog
-    }
-
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
       final directory = await getApplicationDocumentsDirectory();
-      final filename = p.basename(pickedFile.path);
-      final savedPath = p.join(directory.path, filename);
+      final fileName = p.basename(pickedFile.path);
+      final savedPath = p.join(directory.path, fileName);
       final savedFile = await File(pickedFile.path).copy(savedPath);
 
       final prefs = await SharedPreferences.getInstance();
@@ -41,3 +36,9 @@ class ProfileImageNotifier extends StateNotifier<File?> {
     }
   }
 }
+
+final profileImageProvider = StateNotifierProvider<ProfileImageNotifier, File?>(
+  (ref) {
+    return ProfileImageNotifier();
+  },
+);

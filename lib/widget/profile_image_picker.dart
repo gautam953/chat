@@ -1,16 +1,6 @@
-
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../controller/profile_image_notifier.dart';
-
-/// Riverpod provider
-final profileImageProvider =
-StateNotifierProvider<ProfileImageNotifier, File?>((ref) {
-  return ProfileImageNotifier();
-});
 
 class ProfileImagePicker extends ConsumerWidget {
   const ProfileImagePicker({super.key});
