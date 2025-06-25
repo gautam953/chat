@@ -1,18 +1,23 @@
+// main profile screen with image picker integrated
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ProfileScreen extends StatefulWidget {
+import '../controller/profile_image_notifier.dart';
+import '../widget/profile_image_picker.dart';
+
+class ProfileScreen extends ConsumerStatefulWidget {
   final User currentUser;
 
   const ProfileScreen({super.key, required this.currentUser});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   String userName = '';
   String joinDate = '';
   late TextEditingController nameController;
@@ -28,7 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _fetchUserData() async {
     final userDoc = await FirebaseFirestore.instance
-        .collection('start') // your Firestore collection
+        .collection('start')
         .doc(widget.currentUser.uid)
         .get();
 
@@ -48,7 +53,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _changePassword() async {
     final currentUser = widget.currentUser;
-
     final oldPassController = TextEditingController();
     final newPassController = TextEditingController();
 
@@ -73,14 +77,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Change'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Change')),
         ],
       ),
     );
@@ -91,9 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       if (newPassword.length < 6) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Password must be at least 6 characters'),
-          ),
+          const SnackBar(content: Text('Password must be at least 6 characters')),
         );
         return;
       }
@@ -102,35 +98,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
         final email = currentUser.email;
         if (email == null) throw 'No email available';
 
-        // Step 1: Re-authenticate
-        final cred = EmailAuthProvider.credential(
-          email: email,
-          password: oldPassword,
-        );
+        final cred = EmailAuthProvider.credential(email: email, password: oldPassword);
         await currentUser.reauthenticateWithCredential(cred);
-
-        // Step 2: Update password
         await currentUser.updatePassword(newPassword);
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('✅ Password changed successfully')),
         );
       } catch (e) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('❌ Error: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('❌ Error: $e')),
+        );
       }
     }
   }
 
+  Widget _buildReadOnlyField(TextEditingController controller, IconData icon, String label) {
+    return TextField(
+      controller: controller,
+      readOnly: true,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final imageFile = ref.watch(profileImageProvider);
+    final controller = ref.read(profileImageProvider.notifier);
+
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          const ProfileImagePicker(),
+          const SizedBox(height: 30),
+          const SizedBox(height: 30),
           _buildReadOnlyField(nameController, Icons.person, 'Name'),
           const SizedBox(height: 30),
           _buildReadOnlyField(emailController, Icons.email, 'Email'),
@@ -148,33 +156,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             width: 400,
             child: ElevatedButton.icon(
               icon: const Icon(Icons.lock_reset, color: Colors.white),
-              label: const Text(
-                'Change Password',
-                style: TextStyle(color: Colors.white),
-              ),
+              label: const Text('Change Password', style: TextStyle(color: Colors.white)),
               onPressed: _changePassword,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue.shade600,
-              ),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue.shade600),
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildReadOnlyField(
-    TextEditingController controller,
-    IconData icon,
-    String label,
-  ) {
-    return TextField(
-      controller: controller,
-      readOnly: true,
-      decoration: InputDecoration(
-        labelText: label,
-        prefixIcon: Icon(icon),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
       ),
     );
   }
