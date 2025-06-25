@@ -54,6 +54,12 @@ dependencies:
   image_picker: ^1.1.2
   shared_preferences: ^2.5.3
   path: ^1.9.1
+  flutter_launcher_icons: ^0.14.4
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/img_4.png"
 
 dev_dependencies:
   flutter_test:

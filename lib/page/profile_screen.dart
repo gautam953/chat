@@ -4,8 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../controller/profile_image_notifier.dart';
 import '../widget/profile_image_picker.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
