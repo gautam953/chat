@@ -282,7 +282,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         children: [home(), buildGroupList(), profile()],
       ),
       floatingActionButton: Container(
-        height: 50,
+        height: 60,
         width: 330,
         decoration: BoxDecoration(
           color: Colors.grey[800],
@@ -305,6 +305,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
               onPressed: () => ref.read(navIndexProvider.notifier).state = 1,
             ),
+
             IconButton(
               icon: Icon(
                 Icons.person,

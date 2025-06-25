@@ -1,18 +1,4 @@
-// import 'package:flutter/cupertino.dart';
-// import 'package:flutter_riverpod/flutter_riverpod.dart';
-//
-// final nameProvider = Provider<String>((ref){
-//  return "gautam";
-// });
-//
-// class MyWidget extends ConsumerWidget{
-//   Widget build(BuildContext context,WidgetRef ref){
-//     final name = ref.watch(nameProvider);
-//     return Text("Hello $name",);
-//   }
-// }
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
