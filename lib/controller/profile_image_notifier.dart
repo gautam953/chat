@@ -11,7 +11,6 @@ class ProfileImageNotifier extends StateNotifier<File?> {
     _loadImageFromPrefs();
   }
 
-  /// Load saved image from shared preferences
   Future<void> _loadImageFromPrefs() async {
     final prefs = await SharedPreferences.getInstance();
     final path = prefs.getString('profile_image');
@@ -20,7 +19,6 @@ class ProfileImageNotifier extends StateNotifier<File?> {
     }
   }
 
-  /// Pick image and save locally + shared preferences
   Future<void> pickImage() async {
     final status = await Permission.photos.request();
     if (!status.isGranted) {
