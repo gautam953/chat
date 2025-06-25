@@ -75,8 +75,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Change')),
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Change'),
+          ),
         ],
       ),
     );
@@ -87,7 +93,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
       if (newPassword.length < 6) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Password must be at least 6 characters')),
+          const SnackBar(
+            content: Text('Password must be at least 6 characters'),
+          ),
         );
         return;
       }
@@ -96,7 +104,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         final email = currentUser.email;
         if (email == null) throw 'No email available';
 
-        final cred = EmailAuthProvider.credential(email: email, password: oldPassword);
+        final cred = EmailAuthProvider.credential(
+          email: email,
+          password: oldPassword,
+        );
         await currentUser.reauthenticateWithCredential(cred);
         await currentUser.updatePassword(newPassword);
 
@@ -104,14 +115,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           const SnackBar(content: Text('✅ Password changed successfully')),
         );
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('❌ Error: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('❌ Error: $e')));
       }
     }
   }
 
-  Widget _buildReadOnlyField(TextEditingController controller, IconData icon, String label) {
+  Widget _buildReadOnlyField(
+    TextEditingController controller,
+    IconData icon,
+    String label,
+  ) {
     return TextField(
       controller: controller,
       readOnly: true,
@@ -150,9 +165,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             width: 400,
             child: ElevatedButton.icon(
               icon: const Icon(Icons.lock_reset, color: Colors.white),
-              label: const Text('Change Password', style: TextStyle(color: Colors.white)),
+              label: const Text(
+                'Change Password',
+                style: TextStyle(color: Colors.white),
+              ),
               onPressed: _changePassword,
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue.shade600),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue.shade600,
+              ),
             ),
           ),
         ],
